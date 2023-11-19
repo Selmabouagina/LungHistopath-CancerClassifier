@@ -11,7 +11,7 @@ This repository contains a deep learning model for classifying lung cancer types
 - Offers detailed evaluation metrics (accuracy, precision, recall, F1-score).
 
 ## Dataset
-The dataset used comprises lung and colon cancer histopathological images.
+The project uses a dataset of histopathological images specific to lung and colon cancer. This dataset can be accessed from Kaggle at the following URL: [Lung and Colon Cancer Histopathological Images](https://www.kaggle.com/datasets/andrewmvd/lung-and-colon-cancer-histopathological-images).
 
 ## Models
 The model leverages CNN architectures, optimized for histopathological image analysis. It includes layers for feature extraction and classification, alongside techniques like dropout for regularization.
