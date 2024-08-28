@@ -263,9 +263,7 @@ elif selected_option == "About Us":
             <h3 style='text-align: center;'>We can ensure a specialist doctor to visit you at home</h3>
             <p style='text-align: center;'>Book an appointment today to get expert medical care at your convenience.</p>
         """, unsafe_allow_html=True)
-        # Book an Appointment button
-        if st.button("Book an Appointment"):
-            st.session_state.page = "Make Appointment"  # Set the session state to navigate
+        
 
 
         
