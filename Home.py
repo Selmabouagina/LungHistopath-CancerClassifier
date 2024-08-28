@@ -6,7 +6,15 @@ import hashlib
 
 # Set up the layout with columns
 col1, col2 = st.columns([2, 1])  # Adjust the ratio as needed
+# Add the logo image above the sidebar menu
+st.sidebar.image("logo.png", use_column_width=True)
 
+# If you want to add a name alongside or under the logo, you can do so as well
+st.sidebar.markdown("""
+    <div style="text-align: center; padding-top: 5px;">
+        <h2 style="color: #BA1132; margin-top: 0;">Medical Web App</h2>
+    </div>
+""", unsafe_allow_html=True)
 # Custom CSS to change the background color
 st.markdown(
     """
@@ -162,7 +170,7 @@ elif selected_option == "Learn About the Model":
     st.title("Learn About the Model")
     st.write("This section explains how the deep learning model works.")
     st.write("Add details about CNNs, training data, etc.")
-    st.image(r"C:\Users\MSI\Desktop\Projects\LungHistopath-CancerClassifier\LungHistopath-CancerClassifier\model_architecture.png", use_column_width=True)
+    st.image(r"C:\Users\MSI\Desktop\Projects\LungHistopath-CancerClassifier\LungHistopath-CancerClassifier\model_architecture.png", width=400)
 
 elif selected_option == "Book an Appointment":
     # Input fields for appointment details
