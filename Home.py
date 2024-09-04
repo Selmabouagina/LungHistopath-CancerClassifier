@@ -3,6 +3,10 @@ from PIL import Image
 import sqlite3
 from datetime import datetime
 import hashlib
+import tensorflow as tf
+import numpy as np
+import io
+from tensorflow.keras.preprocessing.image import img_to_array  # Ensure this import is present
 
 # Set up the layout with columns
 col1, col2 = st.columns([2, 1])  # Adjust the ratio as needed
@@ -94,9 +98,30 @@ def register():
         else:
             st.write("Please fill in all fields.")
 
+# Load your pre-trained model
+model = tf.keras.models.load_model(r'C:\Users\MSI\Desktop\Projects\LungHistopath-CancerClassifier\LungHistopath-CancerClassifier\cnn_model.h5')
+
+# Define the labels
+labels = ['lung_aca', 'lung_scc', 'lung_n']
+
+def preprocess_image(img):
+    # Resize and preprocess the image for your model
+    img = img.resize((224, 224))  # Adjust size based on your model's input
+    img_array = img_to_array(img)  # Convert the image to a numpy array
+    img_array = np.expand_dims(img_array, axis=0)  # Add an extra dimension for batch size
+    img_array = img_array / 255.0  # Normalize the image
+    return img_array
+
+def predict(image_array):
+    prediction = model.predict(image_array)
+    predicted_class = np.argmax(prediction, axis=1)[0]  # Get the index of the highest prediction
+    print(prediction)
+    print(predicted_class)
+    return labels[predicted_class]  # Return the corresponding label
+
 # Sidebar Menu
 st.sidebar.title("Menu")
-menu_options = ["Home", "Book an Appointment", "Upload Image", "Learn About the Model", "About Us"]
+menu_options = ["Home", "Book an Appointment", "Classify Lung Cancer", "Learn About the Model", "About Us"]
 selected_option = st.sidebar.selectbox("Choose a section:", menu_options)
 
 if selected_option == "Home":
@@ -133,38 +158,21 @@ if selected_option == "Home":
         </div>
     """, unsafe_allow_html=True)
 
-    st.markdown("""
-        <footer style="
-            background-color: #FFFFFF;
-            color: white;
-            padding: 20px;
-            width: 100%;
-            text-align: center;
-            position: fixed;
-            bottom: 0;
-            left: 0;
-        ">
-            <div style="display: inline-block;">
-                <a href="#contact" style="color: black; text-decoration: none; font-weight: bold; margin-right: 20px;">Contact</a>
-                <a href="#about" style="color: black; text-decoration: none; font-weight: bold; margin-right: 20px;">About</a>
-                <a href="#privacy" style="color: black; text-decoration: none; font-weight: bold;">Privacy Policy</a>
-            </div>
-            <p style="color: black; margin-top: 10px;">© 2024 Medical Web App. All rights reserved.</p>
-        </footer>
-    """, unsafe_allow_html=True)
 
-
-
-
-elif selected_option == "Upload Image":
-    st.title("Upload a Histopathological Image")
-    uploaded_file = st.file_uploader("Choose an image...", type="jpg")
+elif selected_option == "Classify Lung Cancer":
+    st.title("Classify Histopathological Image for Lung Cancer")
+    uploaded_file = st.file_uploader("Choose an image...", type="jpeg")
     if uploaded_file is not None:
-        image = Image.open(uploaded_file)
+        image = Image.open(uploaded_file).convert('RGB')
         st.image(image, caption='Uploaded Image.', use_column_width=True)
-        # Add prediction code here
-
-
+        
+        # Preprocess the image and make prediction
+        preprocessed_image = preprocess_image(image)
+        predicted_label = predict(preprocessed_image)
+        print(predicted_label)
+        
+        # Display the prediction
+        st.write(f"The model predicts: **{predicted_label}**")
 
 elif selected_option == "Learn About the Model":
     st.title("Learn About the Model")
